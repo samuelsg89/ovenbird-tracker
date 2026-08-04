@@ -1,0 +1,6 @@
+{
+  "callmebot_phone": "+65XXXXXXXX",
+  "callmebot_apikey": "YOUR_API_KEY",
+  "party_sizes": [2, 4],
+  "poll_interval_seconds": 600
+}
