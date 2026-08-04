@@ -11,7 +11,7 @@ import os
 import random
 import sys
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import quote
 from zoneinfo import ZoneInfo
@@ -259,6 +259,11 @@ def maybe_send_release_reminder(config: dict, state: dict) -> None:
 
 
 def run_once(config: dict, state: dict) -> None:
+    # Always changes, so state.json always has a diff to commit - keeps the
+    # repo "active" for GitHub Actions (scheduled workflows auto-disable
+    # after 60 days with no commits) and doubles as a heartbeat/last-run log.
+    state["last_checked_utc"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+
     maybe_send_release_reminder(config, state)
     save_state(state)
     for pers in config.get("party_sizes", [2, 4]):
