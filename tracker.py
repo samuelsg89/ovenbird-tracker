@@ -208,10 +208,12 @@ def check_party_size(config: dict, state: dict, pers: int) -> None:
     if newly_opened:
         changes.append("New day(s) show availability: " + ", ".join(newly_opened))
 
+    # Exclude today (`stardate`): its time-slot bits naturally zero out as each
+    # slot's start time passes during the day, which isn't a real signal.
     changed_slots = changed_slot_dates(
         prev.get("dinnerdata", ""), prev["stardate"], len(prev["availability"]),
         dinnerdata, stardate, len(availability),
-        already_reported=set(newly_opened),
+        already_reported=set(newly_opened) | {stardate},
     )
     if changed_slots:
         changes.append("Time-slot pattern changed on: " + ", ".join(changed_slots) + " - check the calendar.")
