@@ -1,9 +1,11 @@
 name: Ovenbird availability check
 
 on:
-  schedule:
-    - cron: "*/10 * * * *"
   workflow_dispatch: {}
+  # Triggered externally (cron-job.org) every ~10 min via the API, since
+  # GitHub's native `schedule:` trigger proved unreliable (observed gaps of
+  # 3-10+ hours instead of 10 minutes). Keep this workflow_dispatch-only to
+  # avoid duplicate/overlapping runs if a native schedule were added back.
 
 permissions:
   contents: write
